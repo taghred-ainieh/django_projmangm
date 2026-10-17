@@ -1,0 +1,35 @@
+
+<ul>
+    {%for task in project.task_set.all%}
+        <li>
+            <form method="POST" action="{%url 'update_task' task.id %}">
+                {% csrf_token %}    <!-- رمز أمان إجباري لحماية الموقع من الاختراق -->
+                <input type="checkbox" name="is_completed" 
+                    {%if task.is_completed%} checcked{% endif %}
+                    onchange=this.form.submit()
+                />
+            </form>
+            <form method="POST" action="{%url 'delete_task' task.id %}">
+                {% csrf_token %}    <!-- رمز أمان إجباري لحماية الموقع من الاختراق -->
+                <button type='submit'>delete</button>
+            </form>
+            {{task.description}}
+
+        </li>
+    {%endfor%}
+
+
+</ul>
+{% block content %}
+{% load i18n %}
+    <h1>👋 create task</h1>
+    <form method="POST" action="{%url 'create_task' %}">
+        {% csrf_token %}    <!-- رمز أمان إجباري لحماية الموقع من الاختراق -->
+        
+        <input type="hidden" value="{{project.id}}" name="project"/>
+        <input type="text" name="description" placeholder="{%trans 'new task'%}"/>
+        <input type="submit" value="{%trans 'add task'%}"/>
+    </form>
+
+    
+{% endblock %}

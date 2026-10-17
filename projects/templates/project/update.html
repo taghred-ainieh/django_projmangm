@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+<!-- 2️⃣ نفتح المستطيل المحجوز ونضع بداخلة رسالة المحتوى الخاصة بهذه الصفحة -->
+{% block content %}
+    <h1>👋 update project</h1>
+    <form method="POST" action="">
+        {% csrf_token %}    <!-- رمز أمان إجباري لحماية الموقع من الاختراق -->
+        {{ form }}  
+        <button type="submit">حفظ المشروع</button>
+    </form>
+    <form method="POST" action="{%url 'delete_project' object.id %}">
+                {% csrf_token %}    <!-- رمز أمان إجباري لحماية الموقع من الاختراق -->
+                <button type='submit'>delete</button>
+     </form>
+    {% include "project/task.html" with project=object%} 
+    
+{% endblock %}
