@@ -1,0 +1,25 @@
+
+
+{% extends 'base.html' %}
+
+<!-- 2 نفتح المستطيل المحجوز ونضع بداخلة رسالة المحتوى الخاصة بهذه الصفحة -->
+{% block content %}
+{% load i18n %}
+    <h1>project</h1>
+    <ul>
+        {%for project in object_list%}
+        <li>
+        {{project.title}}
+            
+        
+               
+        
+        </li>
+        {%empty%}
+        <li>{% trans "there are no project to show" %}</li>
+        
+        {% endfor %}
+
+    </ul>
+   
+{% endblock %}
