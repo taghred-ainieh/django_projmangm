@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<style>
+    .pms-delete-box {
+        max-width: 550px;
+        margin: 4rem auto;
+    }
+    .pms-delete-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    }
+    .pms-delete-header {
+        background-color: rgba(239, 68, 68, 0.05);
+        border-bottom: 1px solid rgba(239, 68, 68, 0.1);
+        padding: 1.5rem;
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #ef4444;
+    }
+    .pms-delete-body {
+        padding: 2rem 1.5rem;
+    }
+    .pms-project-display {
+        background-color: #f8fafc;
+        border-right: 4px solid #ef4444; /* خط أحمر جانبي */
+        padding: 1.2rem;
+        border-radius: 6px;
+        margin: 1.5rem 0;
+        font-weight: 600;
+        color: #1e293b;
+    }
+    .pms-delete-footer {
+        padding: 1.25rem 1.5rem;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+    .btn-pms-danger {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: #ffffff !important;
+        font-weight: 600;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+    .btn-pms-danger:hover {
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    }
+    .btn-pms-cancel {
+        background-color: #64748b;
+        color: #ffffff !important;
+        font-weight: 600;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+</style>
+
+<div class="pms-delete-box">
+    <!-- نموذج إرسال الحذف الآمن للمتصفح والدالة تطلب POST للتنفيذ -->
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="pms-delete-card">
+            <!-- الهيدر التحذيري -->
+            <div class="pms-delete-header">
+                <i class="bi bi-exclamation-triangle-fill fs-4"></i>
+                <h4 class="m-0 fw-bold">{% trans "تأكيد حذف المشروع" %}</h4>
+            </div>
+            
+            <!-- محتوى صندوق التنبيه -->
+            <div class="pms-delete-body">
+                <p class="text-secondary mb-0">
+                    {% trans "هل أنت متأكد تماماً من رغبتك في حذف هذا المشروع؟ سيؤدي هذا الإجراء إلى مسح المشروع وكافة البيانات والمهام المرتبطة به نهائياً من قاعدة البيانات." %}
+                </p>
+                
+                <!-- عرض اسم المشروع المستهدف من المتغير المتوفر بالدالة -->
+                <div class="pms-project-display">
+                    <i class="bi bi-briefcase-fill text-muted me-2"></i> {{ project.title }}
+                </div>
+            </div>
+            
+            <!-- أزرار الأكشن السفلية -->
+            <div class="pms-delete-footer">
+                <!-- زر الإلغاء يعود بأمان إلى صفحة المشاريع -->
+                <a href="{% url 'project_list' %}" class="btn btn-pms-cancel">
+                    {% trans "تراجع" %}
+                </a>
+                <!-- زر التأكيد الذي يرسل طلب الحذف الفعلي للسيرفر -->
+                <button type="submit" class="btn btn-pms-danger shadow-sm">
+                    
+                    <i class="bi bi-trash3-fill me-1"></i> {% trans "تأكيد الحذف النهائي" %}
+                </button>
+            </div>
+        </div>
+        
+    </form>
+</div>
+{% endblock %}

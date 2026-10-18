@@ -1,10 +1,355 @@
-
-
 {% extends 'base.html' %}
+{% load i18n %}
+{% load humanize %}
 
+{% block content %}
+<style>
+    /* التنسيقات المخصصة للهوية البصرية لنظام إدارة المشاريع */
+    .pms-header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .pms-page-title {
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 1.8rem;
+        margin: 0;
+        letter-spacing: -0.5px;
+    }
+    .pms-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .pms-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        border-color: #38bdf8;
+    }
+    .pms-card-body {
+        padding: 1.75rem;
+        flex-grow: 1;
+    }
+    .pms-project-title {
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* شارات الحالة الديناميكية الأربعة الجديدة */
+    .pms-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 5px 14px;
+        border-radius: 50rem;
+        margin-top: 0.35rem;
+        text-transform: uppercase;
+    }
+    .status-pending {
+        background-color: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+    .status-completed {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+    .status-postponed {
+        background-color: rgba(99, 102, 241, 0.1);
+        color: #6366f1;
+    }
+    .status-canceled {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+    }
+     /* التنسيق الهندسي الفخم لأزرار التنقل */
+    .pms-pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 3.5rem;
+        margin-bottom: 2rem;
+        direction: rtl;
+    }
+    .pms-pagination {
+        display: flex;
+        gap: 8px;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        background-color: #ffffff;
+        padding: 8px 16px;
+        border-radius: 50rem; /* تصميم كبسولة انسيابي */
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+    }
+    .pms-page-item {
+        display: inline-block;
+    }
+    .pms-page-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        height: 36px;
+        padding: 0 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #475569;
+        text-decoration: none;
+        border-radius: 50rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    /* تأثير تمرير الماوس فوق الأرقام */
+    .pms-page-item:not(.pms-active):not(.pms-disabled) .pms-page-link:hover {
+        color: #38bdf8;
+        background-color: rgba(56, 189, 248, 0.08);
+    }
+    /* تصميم رقم الصفحة النشطة حالياً */
+    .pms-active .pms-page-link {
+        background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+        color: #0f172a;
+        box-shadow: 0 4px 10px rgba(56, 189, 248, 0.25);
+    }
+    /* الأزرار غير المتاحة (مثل السهم السابق وأنت في الصفحة الأولى) */
+    .pms-disabled {
+        opacity: 0.35;
+        pointer-events: none;
+    }
+
+    /* أسفل البطاقة وحاوية الأزرار */
+    .pms-card-footer {
+        background-color: #f8fafc;
+        border-top: 1px solid #f1f5f9;
+        padding: 1.2rem 1.75rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .pms-actions-wrapper {
+        display: flex;
+        gap: 8px;
+    }
+    .btn-pms-create {
+        background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+        color: #0f172a !important;
+        font-weight: 600;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.25s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-pms-create:hover {
+        opacity: 0.95;
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    }
+    .btn-pms-edit {
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 6px 12px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .btn-pms-edit:hover {
+        color: #38bdf8;
+        background-color: rgba(56, 189, 248, 0.08);
+    }
+    .btn-pms-delete {
+        color: #ef4444;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 6px 12px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .btn-pms-delete:hover {
+        background-color: rgba(239, 68, 68, 0.08);
+    }
+    
+    /* حاوية رسالة عدم وجود مشاريع مضبوطة لتتوسط تماماً */
+    .pms-empty-state {
+        background-color: #ffffff;
+        border: 2px dashed #cbd5e1;
+        border-radius: 14px;
+        padding: 5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+</style>
+
+<!-- 1. قسم الهيدر العلوي -->
+<div class="pms-header-section">
+    <h1 class="pms-page-title">
+        <i class="bi bi-grid-1x2-fill text-secondary me-2"></i> {% trans "Project" %}
+    </h1>
+    <a href="{% url 'create_projecr' %}" class="btn-pms-create shadow-sm">
+        <i class="bi bi-plus-lg"></i> {% trans "Create" %}
+    </a>
+</div>
+
+<!-- 2. شبكة عرض البطاقات -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for project in object_list %}
+        <div class="col">
+            <div class="pms-card">
+                <div class="pms-card-body">
+                    <!-- عنوان المشروع -->
+                    <h5 class="pms-project-title">
+                        <i class="bi bi-briefcase-fill text-muted me-2"></i> {{ project.title }}
+                    </h5>
+                    
+                    <!-- شارة الحالة الذكية المتوافقة مع الـ IntegerChoices الجديدة -->
+                    <div>
+                        {% if project.status == 1 or project.status == '1' %}
+                            <span class="pms-status-badge status-pending">
+                                <i class="bi bi-hourglass-split"></i> {{ project.get_status_display }}
+                            </span>
+                        {% elif project.status == 2 or project.status == '2' %}
+                            <span class="pms-status-badge status-completed">
+                                <i class="bi bi-check-circle-fill"></i> {{ project.get_status_display }}
+                            </span>
+                        {% elif project.status == 3 or project.status == '3' %}
+                            <span class="pms-status-badge status-postponed">
+                                <i class="bi bi-calendar-x"></i> {{ project.get_status_display }}
+                            </span>
+                        {% elif project.status == 4 or project.status == '4' %}
+                            <span class="pms-status-badge status-canceled">
+                                <i class="bi bi-x-circle-fill"></i> {{ project.get_status_display }}
+                            </span>
+                        {% else %}
+                            <span class="pms-status-badge bg-secondary text-white">
+                                <i class="bi bi-question-circle"></i> {{ project.get_status_display|default:"Unknown" }}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- أسفل البطاقة يحتوي على الأكشن والتفاصيل الجانبية -->
+                <div class="pms-card-footer">
+                    <span class="text-secondary small">
+                        <i class="bi bi-shield-check"></i> Verified
+                    </span>
+                    
+                    <div class="pms-actions-wrapper">
+                        <!-- زر التعديل -->
+                        <a href="{% url 'update_project' project.id %}" class="btn-pms-edit">
+                            <i class="bi bi-pencil-square"></i> {% trans "Edit" %}
+                        </a>
+                        <!-- زر الحذف -->
+                        <!-- زر الحذف المطور مع رسالة التأكيد التلقائية من المتصفح -->
+                        <a href="{% url 'delete_project' project.id %}" class="btn-pms-delete">
+                            <i class="bi bi-trash3-fill"></i> {% trans "Delete" %}
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <!-- حالة عدم وجود مشاريع نشطة لعرضها متمركزة ومصممة بنص الحاوية بالكامل -->
+        <div class="col-12">
+            <div class="pms-empty-state shadow-sm">
+                <div class="text-muted mb-3">
+                    <i class="bi bi-folder-x" style="font-size: 4rem; color: #94a3b8;"></i>
+                </div>
+                <h4 class="text-dark fw-bold mb-2">{% trans "there are no project to show" %}</h4>
+                <p class="text-secondary small max-w-100 mb-4" style="max-width: 400px;">
+                    {% trans "لا توجد أي مشاريع مسجلة في النظام حالياً. يمكنك البدء الآن بالضغط على الزر أدناه لإنشاء مشروعك الأول وتنظيم مهامك." %}
+                </p>
+                <a href="{% url 'create_projecr' %}" class="btn-pms-create shadow-sm">
+                     <i class="bi bi-plus-lg"></i> {% trans "Create Project" %}
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+    {% if is_paginated %}
+    <nav class="pms-pagination-wrapper" aria-label="Page navigation">
+        <ul class="pms-pagination">
+            
+            <!-- زر الصفحة السابقة (يظهر فقط إذا لم نكن في الصفحة الأولى) -->
+            {% if page_obj.has_previous %}
+                <li class="pms-page-item">
+                    <a class="pms-page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Previous">
+                        <i class="bi bi-chevron-right"></i> <!-- السهم لليمين لأن الموقع عربي RTL -->
+                    </a>
+                </li>
+            {% else %}
+                <li class="pms-page-item pms-disabled">
+                    <span class="pms-page-link"><i class="bi bi-chevron-right"></i></span>
+                </li>
+            {% endif %}
+
+            <!-- عرض أرقام الصفحات ديناميكياً -->
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <!-- الصفحة الحالية النشطة تضيء باللون السماوي المميز للمشروع -->
+                    <li class="pms-page-item pms-active">
+                        <span class="pms-page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="pms-page-item">
+                        <a class="pms-page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            <!-- زر الصفحة التالية (يظهر فقط إذا كان هناك صفحات قادمة) -->
+            {% if page_obj.has_next %}
+                <li class="pms-page-item">
+                    <a class="pms-page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Next">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+            {% else %}
+                <li class="pms-page-item pms-disabled">
+                    <span class="pms-page-link"><i class="bi bi-chevron-left"></i></span>
+                </li>
+            {% endif %}
+
+        </ul>
+    </nav>
+{% endif %}
+</div>
+
+{% endblock %}
+
+
+
+{% comment %} {% extends 'base.html' %}
+{% load i18n %}
+{%load humaniz%}
 <!-- 2 نفتح المستطيل المحجوز ونضع بداخلة رسالة المحتوى الخاصة بهذه الصفحة -->
 {% block content %}
-{% load i18n %}
+
     <h1>project</h1>
     <ul>
         {%for project in object_list%}
@@ -21,5 +366,5 @@
         {% endfor %}
 
     </ul>
-   
-{% endblock %}
+    <a href="{% url 'create_projecr'  %}">create</a>
+{% endblock %} {% endcomment %}

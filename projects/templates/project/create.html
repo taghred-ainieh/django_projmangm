@@ -1,13 +1,103 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-<!-- 2️⃣ نفتح المستطيل المحجوز ونضع بداخلة رسالة المحتوى الخاصة بهذه الصفحة -->
 {% block content %}
-    <h1>👋 create project</h1>
-    <form method="POST" action="">
-        {% csrf_token %}    <!-- رمز أمان إجباري لحماية الموقع من الاختراق -->
-        {{ form }}  
-        <button type="submit">حفظ المشروع</button>
-    </form>
+<style>
+    /* تنسيق بطاقة الحاوية الخارجية للفورم */
+    .pms-form-wrapper {
+        max-width: 650px;
+        margin: 2rem auto;
+    }
+    .pms-form-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+    .pms-form-header {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        padding: 1.5rem;
+        color: #ffffff;
+        border-bottom: 2px solid #38bdf8;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .pms-form-header h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0;
+    }
+    .pms-form-body {
+        padding: 2rem 1.75rem;
+    }
+    .pms-form-footer {
+        padding: 1.25rem 1.75rem;
+        background-color: #f8fafc;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+    /* تنسيق أزرار التحكم والارسال */
+    .btn-pms-save {
+        background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+        color: #0f172a !important;
+        font-weight: 600;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+    .btn-pms-save:hover {
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    }
+    .btn-pms-cancel {
+        background-color: #64748b;
+        color: #ffffff !important;
+        font-weight: 600;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+</style>
 
-    
+<div class="pms-form-wrapper">
+    <!-- نموذج الارسال الفعلي للسيرفر بطلب POST -->
+    <form method="POST" action="">
+        {% csrf_token %}
+        
+        <div class="pms-form-card">
+            <!-- رأس البطاقة -->
+            <div class="pms-form-header">
+                <i class="bi bi-folder-plus fs-4" style="color: #38bdf8;"></i>
+                <h3>{% trans "Create New Project" %}</h3>
+            </div>
+            
+            <!-- جلب وحقن ملف الفورم المشترك والتلقائي هنا بذكاء -->
+            <div class="pms-form-body">
+                {% include 'form.html' %}
+            </div>
+            
+            <!-- أزرار التحكم المنسقة -->
+            <div class="pms-form-footer">
+                <a href="{% url 'project_list' %}" class="btn btn-pms-cancel">
+                    {% trans "Cancel" %}
+                </a>
+                <button type="submit" class="btn btn-pms-save shadow-sm">
+                    <i class="bi bi-check-lg"></i> {% trans "Save Project" %}
+                </button>
+            </div>
+        </div>
+        
+    </form>
+</div>
 {% endblock %}

@@ -1,11 +1,126 @@
+{% load i18n %}
 
-<ul>
+<style>
+    /* حاوية قائمة المهام */
+    .pms-task-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1.5rem 0;
+    }
+    .pms-task-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.8rem 0.5rem;
+        border-bottom: 1px solid #f1f5f9;
+        transition: background-color 0.2s;
+        gap: 12px;
+    }
+    .pms-task-item:hover {
+        background-color: #f8fafc;
+    }
+    .pms-task-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-grow: 1;
+    }
+    .pms-task-text {
+        font-size: 0.95rem;
+        color: #334155;
+        transition: all 0.2s;
+    }
+    .pms-task-completed {
+        text-decoration: line-through;
+        color: #94a3b8;
+        font-style: italic;
+    }
+    .pms-checkbox {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #10b981;
+    }
+    
+    /* صندوق إضافة مهمة جديدة */
+    .pms-add-task-box {
+        background-color: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        margin-top: 1rem;
+    }
+    .pms-add-task-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #475569;
+        margin-bottom: 0.5rem;
+    }
+</style>
+
+<!-- 1️⃣ أولاً: قائمة المهام الحالية -->
+<ul class="pms-task-list">
+    {% for task in project.task_set.all %}
+        <li class="pms-task-item">
+            
+            <div class="pms-task-right">
+                <!-- فورم التحديث التلقائي لحالة المهمة عند الضغط -->
+                <form method="POST" action="{% url 'update_task' task.id %}" class="m-0">
+                    {% csrf_token %}
+                    <input type="checkbox" name="is_completed" class="pms-checkbox"
+                        {% if task.is_completed %} checked{% endif %}
+                        onchange="this.form.submit()"
+                    />
+                </form>
+                
+                <!-- نص المهمة -->
+                <span class="pms-task-text {% if task.is_completed %}pms-task-completed{% endif %}">
+                    {{ task.description }}
+                </span>
+            </div>
+
+            <!-- 📌 تم تعديل هذا الزر هنا ليكون زر بوتستراب أحمر صريح ومضمون الظهور فوراً -->
+            <form method="POST" action="{% url 'delete_task' task.id %}" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-2" style="font-size: 0.8rem; font-weight: 600;">
+                    <i class="bi bi-trash3-fill"></i> {% trans "Delete" %}
+                </button>
+            </form>
+
+        </li>
+    {% empty %}
+        <li class="text-center text-muted py-3 small">
+            <i class="bi bi-clipboard-x d-block fs-3 mb-1"></i>
+            {% trans "لا توجد مهام مضافة لهذا المشروع بعد." %}
+        </li>
+    {% endfor %}
+</ul>
+
+<!-- 2️⃣ ثانياً: صندوق إضافة مهمة جديدة -->
+<div class="pms-add-task-box">
+    <div class="pms-add-task-title"><i class="bi bi-plus-circle-fill text-primary"></i> {% trans "إضافة مهمة جديدة" %}</div>
+    <form method="POST" action="{% url 'create_task' %}" class="m-0">
+        {% csrf_token %}
+        
+        <input type="hidden" value="{{ project.id }}" name="project"/>
+        
+        <div class="input-group input-group-sm">
+            <input type="text" name="description" class="form-control" placeholder="{% trans 'اكتب تفاصيل المهمة هنا...' %}" required autocomplete="off"/>
+            <button class="btn btn-primary fw-bold" type="submit">
+                {% trans "إضافة" %}
+            </button>
+        </div>
+    </form>
+</div>
+
+
+{% comment %} <ul>
     {%for task in project.task_set.all%}
         <li>
             <form method="POST" action="{%url 'update_task' task.id %}">
                 {% csrf_token %}    <!-- رمز أمان إجباري لحماية الموقع من الاختراق -->
                 <input type="checkbox" name="is_completed" 
-                    {%if task.is_completed%} checcked{% endif %}
+                    {%if task.is_completed%} checked{% endif %}
                     onchange=this.form.submit()
                 />
             </form>
@@ -32,4 +147,4 @@
     </form>
 
     
-{% endblock %}
+{% endblock %} {% endcomment %}

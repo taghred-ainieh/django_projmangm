@@ -1,20 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>djando project_managment</title>
+    <!-- روابط البوتستراب والأيقونات المعتمدة لديك -->
+    <link href="https://jsdelivr.net" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://jsdelivr.net">
 
+    <!-- تنسيق هيكلي إجباري لضمان ثبات عناصر الصفحة والفوتر في الأسفل تماماً -->
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #f8fafc;
+        }
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .content-container {
+            flex: 1 0 auto;
+            padding: 40px 15px;
+        }
+    </style>
 </head>
 <body>
-    
 
-    <div class="container py-4">
-         {% block content %}
-        <!-- المحتوى المتغير لكل صفحة يوضع هنا -->
-         {% endblock %}
+    <div class="main-wrapper">
+        <!-- شريط التنقل العلوي -->
+        {% include 'navbar.html' %}
+        
+        <!-- المحتوى المتغير بالمنتصف بحواف مريحة -->
+        <div class="container content-container">
+             {% block content %}
+             <!-- المحتوى المتغير لكل صفحة يوضع هنا -->
+             {% endblock %}
+        </div>
 
+        <!-- الفوتر السفلي المثبت والممتد -->
+        {% include 'footer.html' %}
     </div>
 
-
-
+    <script src="https://jsdelivr.net" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

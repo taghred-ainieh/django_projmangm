@@ -1,4 +1,168 @@
 {% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<style>
+    /* تنسيق نظام الشبكة المتقابلة (يمين ويسار) */
+    .pms-update-grid {
+        display: flex;
+        flex-direction: row-reverse; /* ترتيب العناصر لتبدأ الاستمارة من اليمين والمهام على اليسار */
+        gap: 30px;
+        margin-top: 2rem;
+        align-items: flex-start;
+    }
+    
+    /* القسم الأيمن: بطاقة استمارة التعديل */
+    .pms-form-column {
+        flex: 1 1 60%; /* يأخذ 60% من عرض الشاشة */
+        min-width: 0;
+    }
+    
+    /* القسم الأيسر: بطاقة المهام المضمنة */
+    .pms-tasks-column {
+        flex: 1 1 40%; /* يأخذ 40% من عرض الشاشة */
+        min-width: 0;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        padding: 1.5rem;
+    }
+
+    .pms-form-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+    .pms-form-header {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        padding: 1.5rem;
+        color: #ffffff;
+        border-bottom: 2px solid #38bdf8;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        direction: rtl;
+    }
+    .pms-form-header h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0;
+    }
+    .pms-form-body {
+        padding: 2rem 1.75rem;
+    }
+    .pms-form-footer {
+        padding: 1.25rem 1.75rem;
+        background-color: #f8fafc;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        direction: rtl;
+    }
+
+    /* تنسيق أزرار التحكم والارسال */
+    .btn-pms-save {
+        background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+        color: #0f172a !important;
+        font-weight: 600;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+    .btn-pms-save:hover {
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    }
+    .btn-pms-cancel {
+        background-color: #64748b;
+        color: #ffffff !important;
+        font-weight: 600;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+    .btn-pms-cancel:hover {
+        background-color: #475569;
+    }
+
+    /* التجاوب التلقائي مع شاشات الهواتف المحمولة لتحويلها فوق بعضها */
+    @media (max-width: 992px) {
+        .pms-update-grid {
+            flex-direction: column;
+            gap: 20px;
+        }
+        .pms-form-column, .pms-tasks-column {
+            width: 100%;
+            flex: 1 1 100%;
+        }
+    }
+</style>
+
+<!-- حاوية التصميم المتقابل الفخم -->
+<div class="pms-update-grid">
+    
+    <!-- 🟢 أولاً: جهة اليمين - استمارة تعديل المشروع -->
+    <div class="pms-form-column">
+        <form method="POST" action="">
+            {% csrf_token %}
+            
+            <div class="pms-form-card">
+                <!-- رأس بطاقة التعديل -->
+                <div class="pms-form-header">
+                    <i class="bi bi-pencil-square fs-4" style="color: #38bdf8;"></i>
+                    <h3>{% trans "Update Project Details" %}</h3>
+                </div>
+                
+                <!-- تضمين كود الفورم الموحد مع الخطوط الجانبية والحواف المعتدلة -->
+                <div class="pms-form-body">
+                    {% include 'form.html' %}
+                </div>
+                
+                <!-- أزرار التحكم السفلية المنسقة عمودياً على خط واحد من اليمين -->
+                <div class="pms-form-footer">
+                    <a href="{% url 'project_list' %}" class="btn btn-pms-cancel">
+                        {% trans "Cancel" %}
+                    </a>
+                    <button type="submit" class="btn btn-pms-save shadow-sm">
+                        <i class="bi bi-save-fill"></i> {% trans "Save Changes" %}
+                    </button>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+
+    <!-- 🔵 ثانياً: جهة اليسار - اللوحة الجانبية للمهام التابعة للمشروع -->
+    <div class="pms-tasks-column">
+        <div style="direction: rtl; text-align: right;">
+            <h5 class="fw-bold text-dark mb-3">
+                <i class="bi bi-list-task text-primary me-2"></i> {% trans "مهام المشروع" %}
+            </h5>
+            <hr class="my-2" style="opacity: 0.1;">
+            <!-- حقن ملف المهام الممرر تلقائياً من السيرفر -->
+            {% include "project/task.html" with project=object %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+
+
+
+
+{% comment %} {% extends 'base.html' %}
 
 <!-- 2️⃣ نفتح المستطيل المحجوز ونضع بداخلة رسالة المحتوى الخاصة بهذه الصفحة -->
 {% block content %}
@@ -8,10 +172,7 @@
         {{ form }}  
         <button type="submit">حفظ المشروع</button>
     </form>
-    <form method="POST" action="{%url 'delete_project' object.id %}">
-                {% csrf_token %}    <!-- رمز أمان إجباري لحماية الموقع من الاختراق -->
-                <button type='submit'>delete</button>
-     </form>
+   
     {% include "project/task.html" with project=object%} 
     
-{% endblock %}
+{% endblock %} {% endcomment %}
