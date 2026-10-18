@@ -1,13 +1,11 @@
 {% load i18n %}
 <style>
-    /* تأثير الإضاءة السماوية الفخمة عند الضغط على مربع البحث لبدء الكتابة */
     .pms-search-field:focus {
         border-color: #38bdf8 !important;
         background-color: rgba(255, 255, 255, 0.1) !important;
         box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.15) !important;
         outline: 0;
     }
-    /* تحسين لون نص التلميح ليصبح واضحاً وقابلاً للقراءة */
     .pms-search-field::placeholder {
         color: #94a3b8 !important;
         opacity: 0.8;
@@ -20,13 +18,18 @@
     .pms-nav-container {
         display: flex;
         align-items: center;
-        justify-content: space-between; /* توزيع العناصر على الشاشة */
+        justify-content: space-between;
         width: 100%;
     }
     .pms-nav-right {
         display: flex;
         align-items: center;
         gap: 20px;
+    }
+    .pms-nav-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
     }
     .pms-brand {
         color: #ffffff !important;
@@ -53,37 +56,96 @@
         background-color: rgba(56, 189, 248, 0.1);
     }
     
-    /* 📌 تنسيق نموذج البحث الفخم الجديد */
     .pms-search-form {
-        max-width: 300px;
+        max-width: 280px;
         width: 100%;
         margin: 0;
     }
-    .pms-search-input {
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid #475569 !important;
+    
+    .pms-user-dropdown {
+        position: relative;
+    }
+    .pms-user-dropdown .dropdown-toggle {
         color: #ffffff !important;
-        border-radius: 6px 0 0 6px !important; /* حواف دائرية من جهة اليسار فقط للمجموعة */
-        text-align: right;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid #475569;
+        padding: 6px 16px;
+        border-radius: 50rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.25s ease;
     }
-    .pms-search-input:focus {
-        border-color: #38bdf8 !important;
-        box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.15) !important;
+    .pms-user-dropdown .dropdown-toggle:hover {
+        border-color: #38bdf8;
+        background-color: rgba(56, 189, 248, 0.1);
     }
-    .pms-search-input::placeholder {
-        color: #64748b;
+
+    /* إخفاء القائمة افتراضياً بشكل طبيعي */
+    .pms-dropdown-menu {
+        display: none !important; 
+        position: absolute;
+        right: 0;
+        top: 100%;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+        padding: 6px !important;
+        min-width: 160px !important;
+        z-index: 1000;
+        margin-top: 8px !important;
     }
-    .btn-pms-search {
-        border: 1px solid #475569 !important;
-        border-right: none !important;
-        background-color: rgba(255, 255, 255, 0.08) !important;
-        color: #38bdf8 !important;
-        border-radius: 0 6px 6px 0 !important;
-        padding: 0 14px;
-        transition: all 0.2s;
+
+    /* السحر البرمجي المستقل لتفتيح القائمة عند الكبس بالـ CSS */
+    .pms-user-dropdown:focus-within .pms-dropdown-menu,
+    .pms-dropdown-menu:hover {
+        display: block !important;
     }
-    .btn-pms-search:hover {
-        background-color: rgba(56, 189, 248, 0.1) !important;
+
+    .pms-dropdown-item {
+        color: #334155 !important;
+        font-weight: 500;
+        font-size: 0.9rem;
+        padding: 8px 12px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    .pms-dropdown-item:hover {
+        background-color: #f1f5f9;
+        color: #0f172a !important;
+    }
+    .pms-dropdown-item-logout {
+        color: #ef4444 !important;
+    }
+    .pms-dropdown-item-logout:hover {
+        background-color: rgba(239, 68, 68, 0.05);
+        color: #dc2626 !important;
+    }
+
+    .btn-nav-login {
+        background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+        color: #0f172a !important;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 8px 18px;
+        border-radius: 50rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 10px rgba(56, 189, 248, 0.15);
+    }
+    .btn-nav-login:hover {
+        box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+        transform: translateY(-1px);
     }
 </style>
 
@@ -91,7 +153,6 @@
     <div class="container-fluid">
         <div class="pms-nav-container">
             
-            <!-- القسم الأيمن: يحتوي على الشعار وزر الرئيسية -->
             <div class="pms-nav-right">
                 <a class="pms-brand" href="{% url 'project_list' %}">
                     <i class="bi bi-kanban-fill" style="color: #38bdf8;"></i> {% trans "PROJECT MANAGEMENT" %}
@@ -101,26 +162,53 @@
                 </a>
             </div>
 
-            <!-- 🔍 القسم الأيسر: صندوق البحث الفخم (يرسل النص المستهدف كـ GET إلى رابط القائمة) -->
-            <!-- 🔍 صندوق البحث المنسق بالكامل والمصحح للحواف العربية -->
-            <form class="pms-search-form" method="GET" action="{% url 'project_list' %}" style="direction: rtl; max-width: 320px; width: 100%;">
-                <div class="input-group" style="position: relative; display: flex; align-items: center;">
-                    
-                    <!-- أيقونة البحث (العدسة) مدمجة بشكل جمالي ثابت داخل المربع من جهة اليمين -->
-                    <span class="pms-search-icon" style="position: absolute; right: 12px; z-index: 10; color: #94a3b8; pointer-events: none;">
-                        <i class="bi bi-search"></i>
-                    </span>
+            <div class="pms-nav-left">
+                {% if user.is_authenticated %}
+                    <form class="pms-search-form" method="GET" action="{% url 'project_list' %}" style="direction: ltr;">
+                        <div class="input-group" style="position: relative; display: flex; align-items: center;">
+                            <span class="pms-search-icon" style="position: absolute; left: 12px; z-index: 10; color: #94a3b8; pointer-events: none;">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" name="q" class="form-control pms-search-field" 
+                                placeholder="Search projects..." 
+                                value="{{ request.GET.q|default:'' }}" 
+                                aria-label="Search"
+                                style="width: 100%; padding: 0.55rem 1rem 0.55rem 2.2rem; font-size: 0.95rem; color: #ffffff; background-color: rgba(255, 255, 255, 0.06); border: 1px solid #475569; border-radius: 50rem; transition: all 0.25s ease; text-align: left;">
+                        </div>
+                    </form>
 
-                    <!-- حقل إدخال النص: انسيابي بحواف دائرية كاملة متناسقة ومساحة داخلية مريحة -->
-                    <input type="text" name="q" class="form-control pms-search-field" 
-                        placeholder="{% trans 'البحث عن مشروع...' %}" 
-                        value="{{ request.GET.q|default:'' }}" 
-                        aria-label="Search"
-                        style="width: 100%; padding: 0.55rem 2.2rem 0.55rem 1rem; font-size: 0.95rem; color: #ffffff; background-color: rgba(255, 255, 255, 0.06); border: 1px solid #475569; border-radius: 50rem; transition: all 0.25s ease; text-align: right;">
+                    <!-- حاوية القائمة المنسدلة للمستخدم -->
+                    <div class="dropdown pms-user-dropdown">
+                        <button class="btn dropdown-toggle shadow-sm" type="button" id="userMenuBtn">
+                            <i class="bi bi-person-circle" style="color: #38bdf8 !important;"></i> 
+                            {{ user.username }}
+                        </button>
+                        <ul class="dropdown-menu pms-dropdown-menu">
+                            <li>
+                                <a class="dropdown-item pms-dropdown-item" href="#">
+                                    <i class="bi bi-person-vcard"></i> {% trans "Profile" %}
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider" style="opacity: 0.08;"></li>
+                            
+                            <!-- 📌 هنا السحر البرمجي المضاف: حقن فورم الـ POST الصغير داخل القائمة المنسدلة لمنع خطأ 405 -->
+                            <li>
+                                <form method="POST" action="{% url 'logout' %}" class="m-0 p-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item pms-dropdown-item pms-dropdown-item-logout" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                                        <i class="bi bi-box-arrow-left"></i> {% trans "Logout" %}
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
 
-                </div>
-            </form>
-
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-nav-login">
+                        <i class="bi bi-box-arrow-in-right"></i> {% trans "Login" %}
+                    </a>
+                {% endif %}
+            </div>
 
         </div>
     </div>

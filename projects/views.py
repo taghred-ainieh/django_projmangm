@@ -5,8 +5,9 @@ from django.contrib import messages
 from django.views.generic import ListView,DetailView,FormView,CreateView,UpdateView,DeleteView
 from projects.models import Project,Task
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
-class ProjectListView(ListView):
+class ProjectListView(LoginRequiredMixin,ListView):
     model = Project
     template_name = 'project/list.html' # أو اسم صفحة القائمة لديك
     paginate_by=3
@@ -25,7 +26,7 @@ class ProjectListView(ListView):
 
 
 
-class create_project(CreateView):
+class create_project(LoginRequiredMixin,CreateView):
     model = Project                     
     fields=['title','descerptions','category']         
     template_name = 'project/create.html'
@@ -33,7 +34,7 @@ class create_project(CreateView):
 
 
 
-class update_project(UpdateView):
+class update_project(LoginRequiredMixin,UpdateView):
     model = Project                       # 1. تحديد جدول قاعدة البيانات المطلوب
     fields=['title','descerptions','status']           # 2. تحديد الاستمارة المراد عرضها
     template_name = 'project/update.html' # 3. تحديد صفحة الـ HTML [1.5, 1.8]
@@ -44,7 +45,7 @@ class update_project(UpdateView):
 
 
 
-class create_task(CreateView):
+class create_task(LoginRequiredMixin,CreateView):
     model = Task                     
     fields=['project','description']         
     template_name = 'project/task.html'
@@ -57,7 +58,7 @@ class create_task(CreateView):
 
 
 
-class update_task(UpdateView):
+class update_task(LoginRequiredMixin,UpdateView):
     model = Task                     
     fields=['is_completed']         
     http_method_names=['post']
@@ -69,7 +70,7 @@ class update_task(UpdateView):
 
 
 
-class delete_task(DeleteView):
+class delete_task(LoginRequiredMixin,DeleteView):
      model=Task  
      def get_success_url(self):
                  # self.object يمثل المشروع الحالي الذي قام المستخدم بتعديله للتو
