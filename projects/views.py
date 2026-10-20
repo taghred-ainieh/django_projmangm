@@ -6,6 +6,9 @@ from django.views.generic import ListView,DetailView,FormView,CreateView,UpdateV
 from projects.models import Project,Task
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
+# 👇 أضيفي هذا السطر في أعلى ملف views.py ليتعرف المحرر على الأمر
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 class ProjectListView(LoginRequiredMixin,ListView):
     model = Project
@@ -79,7 +82,7 @@ class delete_task(LoginRequiredMixin,DeleteView):
 
 
 
-
+@login_required
 
 def delete_project(request, pk):
     project = get_object_or_404(Project, pk=pk)

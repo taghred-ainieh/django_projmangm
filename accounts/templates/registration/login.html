@@ -28,7 +28,7 @@
         margin-bottom: 0.4rem;
     }
     .pms-login-body {
-        padding: 2.5rem 2rem;
+        padding: 2.5rem 2rem 1.5rem 2rem; /* تم تقليل البادينغ السفلي لتتناسب مع الرابط */
     }
 
     /* 📌 السحر الهيكلي: إمساك وتجميل حقول دجانجو الافتراضية {{ form }} مباشرة من الواجهة */
@@ -103,6 +103,22 @@
         box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
         opacity: 0.95;
     }
+
+    /* 📌 التنسيق المطور للرابط السفلي لضمان التموضع في المنتصف تماماً */
+    .pms-login-footer-link {
+        border-top: 1px solid #f1f5f9;
+        padding: 1.2rem 2rem;
+        background-color: #f8fafc;
+        text-align: center; /* محاذاة أفقية للمنتصف */
+        display: flex;
+        justify-content: center; /* توسيط محتوى الفليكس */
+        align-items: center;
+        gap: 4px;
+    }
+    .pms-login-footer-link a:hover {
+        color: #0284c7 !important;
+        text-decoration: underline !important;
+    }
 </style>
 
 <div class="pms-login-box">
@@ -128,6 +144,16 @@
                 <button type="submit" class="btn-pms-login shadow-sm">
                     <i class="bi bi-box-arrow-in-right me-1"></i> {% trans " log_in" %}
                 </button>
+            </div>
+
+            <!-- 🟢 التعديل: نقل الحاوية لأسفل كارد الجسم وتطبيق التوسيط الكامل المستقر -->
+            <div class="pms-login-footer-link">
+                <p class="small text-muted m-0">
+                    {% trans "Don't have an account?" %} 
+                    <a href="{% url 'regester' %}" class="fw-bold ms-1" style="color: #0ea5e9; text-decoration: none; transition: color 0.2s;">
+                        <i class="bi bi-person-plus-fill me-1"></i> {% trans "Create New Account" %}
+                    </a>
+                </p>
             </div>
         </div>
         

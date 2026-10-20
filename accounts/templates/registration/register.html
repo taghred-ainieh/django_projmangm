@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<style>
+    .pms-register-container {
+        max-width: 520px;
+        margin: 4rem auto;
+    }
+    .pms-card-shadow {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+    }
+    .pms-header-gradient {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        padding: 2rem 1.5rem;
+        color: #ffffff;
+        text-align: center;
+        border-bottom: 3px solid #38bdf8;
+    }
+    .pms-body-spacing {
+        padding: 2.5rem 2.2rem;
+    }
+    .pms-field-wrapper {
+        margin-bottom: 1.75rem;
+        direction: rtl;
+        text-align: right;
+    }
+    .pms-label-styled {
+        font-weight: 700;
+        color: #334155;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        display: inline-block;
+    }
+    .btn-pms-submit {
+        background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+        color: #0f172a !important;
+        font-weight: 700;
+        border: none;
+        padding: 13px;
+        border-radius: 8px;
+        width: 100%;
+        font-size: 1rem;
+        transition: all 0.25s ease;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+    .btn-pms-submit:hover {
+        box-shadow: 0 6px 15px rgba(56, 189, 248, 0.35);
+        transform: translateY(-1px);
+    }
+</style>
+
+<div class="pms-register-container">
+    <form method="POST" action="" >
+        {% csrf_token %}
+        
+        <div class="pms-card-shadow">
+            <!-- رأس البطاقة -->
+            <div class="pms-header-gradient">
+                <i class="bi bi-person-plus-fill" style="font-size: 2.5rem; color: #38bdf8;"></i>
+                <h3 class="mt-2 fw-bold" style="font-size: 1.35rem;">{% trans "Create New Account" %}</h3>
+                <p class="small m-0" style="color: #94a3b8;">{% trans "Project Management System" %}</p>
+            </div>
+            
+            <!-- جسم البطاقة المنسق والمتباعد -->
+            <div class="pms-body-spacing">
+                
+                <!-- صندوق الأخطاء الذكي والموحد -->
+                {% if form.non_field_errors or form.errors %}
+                <div class="alert alert-danger border-0 rounded-3 mb-4 shadow-sm" style="background-color: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.1) !important; color: #ef4444; border-right: 4px solid #ef4444 !important; direction: rtl; text-align: right;">
+                    <h6 class="fw-bold mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i> {% trans "Please correct an error:" %}</h6>
+                    <ul class="list-group list-group-flush small p-0" style="list-style: none;">
+                        {% for error in form.non_field_errors %}
+                            <li><i class="bi bi-x-circle me-1"></i> {{ error|escape }}</li>
+                        {% endfor %}
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li><i class="bi bi-x-circle me-1"></i> <strong>{{ field.label }}:</strong> {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- توليد الحقول المنسقة والنظيفة تماماً -->
+                <div class="pms-auth-form">
+                    {% for field in form %}
+                    <div class="pms-field-wrapper">
+                        <label class="pms-label-styled" for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+                        <div class="pms-input-box">
+                            {{ field }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <button type="submit" class="btn-pms-submit shadow-sm">
+                    <i class="bi bi-check-lg me-1"></i> {% trans "Register Account" %}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
