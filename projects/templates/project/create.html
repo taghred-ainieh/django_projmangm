@@ -74,7 +74,7 @@
     <!-- نموذج الارسال الفعلي للسيرفر بطلب POST -->
     <form method="POST" action="">
         {% csrf_token %}
-        
+        {% comment %} <input type='hidden' value='{{user.id}}' name="user_id"/> {% endcomment %}غير مقبول
         <div class="pms-form-card">
             <!-- رأس البطاقة -->
             <div class="pms-form-header">
