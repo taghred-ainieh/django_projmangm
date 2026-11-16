@@ -1,0 +1,158 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-21 17:40+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: .\projects\models.py:16
+msgid "Category"
+msgstr ""
+
+#: .\projects\templates\footer.html:17
+msgid "جميع الحقوق محفوظة لنظام إدارة المشاريع"
+msgstr ""
+
+#: .\projects\templates\form.html:6
+msgid "يرجى تصحيح الأخطاء التالية:"
+msgstr ""
+
+#: .\projects\templates\navbar.html:158
+msgid "PROJECT MANAGEMENT"
+msgstr ""
+
+#: .\projects\templates\navbar.html:161
+msgid "Home"
+msgstr ""
+
+#: .\projects\templates\navbar.html:189
+msgid "Profile"
+msgstr ""
+
+#: .\projects\templates\navbar.html:199
+msgid "Logout"
+msgstr ""
+
+#: .\projects\templates\navbar.html:208
+msgid "Login"
+msgstr ""
+
+#: .\projects\templates\project\create.html:83
+msgid "Create New Project"
+msgstr ""
+
+#: .\projects\templates\project\create.html:94
+#: .\projects\templates\project\update.html:135
+msgid "Cancel"
+msgstr ""
+
+#: .\projects\templates\project\create.html:97
+msgid "Save Project"
+msgstr ""
+
+#: .\projects\templates\project\list.html:212
+msgid "Project"
+msgstr ""
+
+#: .\projects\templates\project\list.html:215
+msgid "Create"
+msgstr ""
+
+#: .\projects\templates\project\list.html:265
+msgid "Edit"
+msgstr ""
+
+#: .\projects\templates\project\list.html:270
+#: .\projects\templates\project\task.html:86
+msgid "Delete"
+msgstr ""
+
+#: .\projects\templates\project\list.html:284
+msgid "there are no project to show"
+msgstr ""
+
+#: .\projects\templates\project\list.html:286
+msgid ""
+"لا توجد أي مشاريع مسجلة في النظام حالياً. يمكنك البدء الآن بالضغط على الزر "
+"أدناه لإنشاء مشروعك الأول وتنظيم مهامك."
+msgstr ""
+
+#: .\projects\templates\project\list.html:289
+msgid "Create Project"
+msgstr ""
+
+#: .\projects\templates\project\task.html:94
+msgid "لا توجد مهام مضافة لهذا المشروع بعد."
+msgstr ""
+
+#: .\projects\templates\project\task.html:101
+msgid "إضافة مهمة جديدة"
+msgstr ""
+
+#: .\projects\templates\project\task.html:108
+msgid "اكتب تفاصيل المهمة هنا..."
+msgstr ""
+
+#: .\projects\templates\project\task.html:110
+msgid "إضافة"
+msgstr ""
+
+#: .\projects\templates\project\update.html:124
+msgid "Update Project Details"
+msgstr ""
+
+#: .\projects\templates\project\update.html:138
+msgid "Save Changes"
+msgstr ""
+
+#: .\projects\templates\project\update.html:150
+msgid "مهام المشروع"
+msgstr ""
+
+#: .\projects\templates\project_confirm_delete.html:80
+msgid "تأكيد حذف المشروع"
+msgstr ""
+
+#: .\projects\templates\project_confirm_delete.html:86
+msgid ""
+"هل أنت متأكد تماماً من رغبتك في حذف هذا المشروع؟ سيؤدي هذا الإجراء إلى مسح "
+"المشروع وكافة البيانات والمهام المرتبطة به نهائياً من قاعدة البيانات."
+msgstr ""
+
+#: .\projects\templates\project_confirm_delete.html:99
+msgid "تراجع"
+msgstr ""
+
+#: .\projects\templates\project_confirm_delete.html:104
+msgid "تأكيد الحذف النهائي"
+msgstr ""
+
+#: .\projects\views.py:41
+msgid "title"
+msgstr ""
+
+#: .\projects\views.py:42
+msgid "descerptions"
+msgstr ""
+
+#: .\projects\views.py:43
+msgid "category"
+msgstr ""
+
+#: .\projects_mangments\urls.py:21 .\projects_mangments\urls.py:22
+msgid "project_managments"
+msgstr ""

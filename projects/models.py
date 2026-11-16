@@ -6,11 +6,14 @@ from django.contrib.auth.models import User
 # 1. جدول المستخدم (User)
 # نستخدم AbstractUser لأن الجدول يحتوي على الحقول الأساسية مع حقول مخصصة
 from django.conf.global_settings import AUTH_USER_MODEL
+from django.utils.translation import gettext as _
 
 # 2. جدول التصنيفات (Category)
 class Category(models.Model):
     name = models.CharField(max_length=255)
-
+    #للتعريب بلوحة التحكم
+    class Meta:
+         verbose_name=_('Category')
     def __str__(self):
         return self.name
 class ProjectStatus(models.IntegerChoices):

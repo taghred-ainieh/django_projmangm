@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ar'
 
 TIME_ZONE = 'UTC'
 
@@ -140,3 +140,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
+# ابحث عن هذا السطر وتأكد أنه مكتوب بهذا الشكل (باستخدام Path)
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]

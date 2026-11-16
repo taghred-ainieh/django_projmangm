@@ -2,8 +2,9 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm,UserChangeForm
 from django.contrib.auth.models import User
+from django.utils.translation import gettext as _
 class CustomUserCreationForm(UserCreationForm):
-    first_name = forms.CharField(label="first_name", required=True)
+    first_name = forms.CharField(label="_first_name", required=True)
     last_name = forms.CharField(label="last_name", required=True)
     email = forms.EmailField(label="email", required=True)
 
@@ -42,10 +43,6 @@ class CustomUserCreationForm(UserCreationForm):
                 ),
                 'placeholder': f'أدخل {field.label}...'
             })
-class profileform(UserChangeForm):
-    from django import forms
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserChangeForm # 👈 استدعاء فورم التعديل الجاهز
 
 class ProfileForm(UserChangeForm):
     # 📦 1. كلاس الميتا لحاله للتحكم بحقول البروفايل المسموحة

@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 # 👇 أضيفي هذا السطر في أعلى ملف views.py ليتعرف المحرر على الأمر
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-
+from django.utils.translation import gettext as _
 # Create your views here.
 class ProjectListView(LoginRequiredMixin,ListView):
     model = Project
@@ -19,24 +19,31 @@ class ProjectListView(LoginRequiredMixin,ListView):
     paginate_by=3
     # 📌 الدالة السحرية لالتقاط كلمة البحث وفلترة البيانات ديناميكياً
     def get_queryset(self):
-        query_set=super(). get_queryset()
-        where={'user_id':self.request.user}
-        # جلب الكلمة المكتوبة في صندوق البحث (إن وُجدت)
+        # 1. جلب مشاريع المستخدم الحالي فقط منذ البداية
+        query_set = super().get_queryset().filter(user_id=self.request.user)
+        
+        # 2. التقاط كلمة البحث
         q = self.request.GET.get('q')
         
+        # 3. البحث داخل مشاريع المستخدم الحالي فقط
         if q:
-            # فلترة المشاريع: جلب أي مشروع يحتوي عنوانه (title) على الكلمة المكتوبة
-            # يمكنك إضافة البحث في الوصف أيضاً عبر كتابة: | Q(description__icontains=query)
-            return Project.objects.filter(Q(title__icontains=q))
+            return query_set.filter(Q(title__icontains=q))
             
-        # إذا لم يكتب المستخدم شيئاً، يتم جلب كل المشاريع بشكل طبيعي
-        return query_set.filter(**where)
+        return query_set
+
 
 
 
 class create_project(LoginRequiredMixin,CreateView):
     model = Project                     
-    fields=['title','descerptions','category']         
+    fields=['title','descerptions','category']    
+    labels={
+                 'title':_('title'),
+                 'descerptions':_('descerptions'),
+                 'category':_('category'),
+        
+         
+    }     
     template_name = 'project/create.html'
     success_url= reverse_lazy('project_list')  
 
